@@ -1,0 +1,17 @@
+@use "sass:color";
+
+$background-color: rgb(0, 139, 173);
+$hover-background-color: color.scale($background-color, $blackness: 25%);
+$active-background-color: color.scale($background-color, $blackness: 35%);
+
+
+
+$default-transition: 400ms;
+$hover-transition: 200ms;
+$active-transition: 300ms;
+
+
+
+
+$border-color: color.scale($background-color, $blackness: 40%);
+$text-color: #FFF;

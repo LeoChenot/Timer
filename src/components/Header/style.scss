@@ -1,0 +1,34 @@
+@use "../../styles/vars.scss";
+@use "sass:color";
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  background-color: vars.$background-color;
+  padding: 1em;
+  color: vars.$text-color;
+
+  &__logo {
+    border-bottom: 0.2em solid transparent;
+    transition: vars.$default-transition;
+
+
+    &:hover {
+      border-bottom-color: vars.$text-color;
+      transition: vars.$hover-transition;
+    }
+
+    &:active {
+      transform: scale(1.1);
+      transition: vars.$active-transition;
+    }
+
+
+    &-text {
+      font-size: 2em;
+    }
+  }
+}
