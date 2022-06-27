@@ -1,0 +1,16 @@
+.main {
+  background-color: lightgray;
+  min-height: 80vh;
+
+  display: flex;
+  flex-direction: column;
+
+  &__timersList {
+    padding: 2em;
+    background-color: gray;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 0 auto;
+    grid-gap: 2em;
+  }
+}

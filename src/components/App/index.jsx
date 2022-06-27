@@ -1,12 +1,13 @@
 import React from 'react';
 import Header from '../Header';
+import Main from '../Main';
 import './index.scss';
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <main>Main</main>
+      <Main />
       <footer>Footer</footer>
     </div>
   );
