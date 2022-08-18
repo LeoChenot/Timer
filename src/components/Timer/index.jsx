@@ -59,7 +59,6 @@ function Timer({
 
   useEffect(() => {
     if (isActive) {
-      dispatch(decreaseTimerById(id));
       const intervalIdTemp = setInterval(() => {
         dispatch(decreaseTimerById(id));
       }, 1000);

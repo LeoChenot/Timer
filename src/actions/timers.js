@@ -34,3 +34,33 @@ export const deleteIntervalId = (timerId) => ({
   type: DELETE_INTERVAL_ID,
   timerId,
 });
+
+// CRUD Timer
+
+export const FETCH_CREATE_TIMER = 'FETCH_CREATE_TIMER';
+export const fetchCreateTimer = () => ({
+  type: FETCH_CREATE_TIMER,
+});
+
+export const FETCH_READ_TIMER = 'FETCH_READ_TIMER';
+export const fetchReadTimer = () => ({
+  type: FETCH_READ_TIMER,
+});
+
+export const FETCH_UPDATE_TIMER_BY_ID = 'FETCH_UPDATE_TIMER_BY_ID';
+export const fetchUpdateTimerById = () => ({
+  type: FETCH_UPDATE_TIMER_BY_ID,
+});
+
+export const FETCH_DELETE_TIMER_BY_ID = 'FETCH_DELETE_TIMER_BY_ID';
+export const fetchDeleteTimerById = () => ({
+  type: FETCH_DELETE_TIMER_BY_ID,
+});
+
+// je sais pas
+
+export const SAVE_TIMER_LIST_RESPONSE = 'SAVE_TIMER_LIST_RESPONSE';
+export const saveTimerListResponse = (timerListResponse) => ({
+  type: SAVE_TIMER_LIST_RESPONSE,
+  timerListResponse,
+});

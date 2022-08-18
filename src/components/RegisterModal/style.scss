@@ -1,0 +1,23 @@
+@use "../../styles/vars.scss";
+@use "sass:color";
+
+.registerModal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(52, 58, 64, 0.8);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &__form {
+    border: 0.6em solid vars.$background-color;
+    padding: 8em 4em;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 1em color.scale(vars.$background-color, $blackness: 50%);
+  }
+}
