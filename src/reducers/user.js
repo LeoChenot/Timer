@@ -1,4 +1,4 @@
-import { SAVE_USER_DATA } from '../actions/user';
+import { SAVE_LOGOUT, SAVE_USER_DATA } from '../actions/user';
 
 const initialState = {
   auth: false,
@@ -18,6 +18,16 @@ const userReducer = (state = initialState, action = {}) => {
         email: action.user.email,
         created_at: action.user.created_at,
         updated_at: action.user.updated_at,
+      };
+    }
+    case SAVE_LOGOUT: {
+      return {
+        ...state,
+        auth: false,
+        id: undefined,
+        email: undefined,
+        created_at: undefined,
+        updated_at: undefined,
       };
     }
     default: {

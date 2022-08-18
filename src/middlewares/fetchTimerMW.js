@@ -10,7 +10,7 @@ import {
 } from '../actions/timers';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: process.env.BASE_URL,
 });
 
 const fetchTimerMW = (store) => (next) => async (action) => {
@@ -19,7 +19,7 @@ const fetchTimerMW = (store) => (next) => async (action) => {
   }
   else if (action.type === FETCH_READ_TIMER) {
     console.log('Je veux lire les timers');
-    const timerListResponse = await instance.get('/timer');
+    const timerListResponse = await instance.get('/api/timer');
     console.log(timerListResponse.data);
     store.dispatch(saveTimerListResponse(timerListResponse.data));
   }

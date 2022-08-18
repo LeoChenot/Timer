@@ -9,8 +9,9 @@ import {
   OutlinedInput,
   TextField,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../../actions/auth';
 import { changeShowPassword, setNewEmailValue, setNewPasswordValue } from '../../actions/loginModal';
 
@@ -19,6 +20,8 @@ import './style.scss';
 
 function LoginModal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { auth } = useSelector((state) => state.userReducer);
 
   const handleSetNewEmailValue = (event) => {
     dispatch(setNewEmailValue(event.target.value));
@@ -40,6 +43,13 @@ function LoginModal() {
     event.preventDefault();
     dispatch(login());
   };
+
+  useEffect(() => {
+    console.log(auth);
+    if (auth) {
+      navigate('/');
+    }
+  }, [auth]);
 
   const {
     emailValue,

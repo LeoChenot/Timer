@@ -3,3 +3,8 @@ export const saveUserData = (user) => ({
   type: SAVE_USER_DATA,
   user,
 });
+
+export const SAVE_LOGOUT = 'SAVE_LOGOUT';
+export const saveLogout = () => ({
+  type: SAVE_LOGOUT,
+});

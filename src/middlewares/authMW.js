@@ -2,10 +2,10 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { CHECK_LOGIN_WITH_TOKEN, LOGIN } from '../actions/auth';
-import { saveUserData } from '../actions/user';
+import { saveLogout, saveUserData } from '../actions/user';
 
 const instance = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: process.env.BASE_URL || 'http://localhost:3001',
 });
 
 const setInstanceAuthorization = () => {
@@ -59,6 +59,7 @@ const authMW = (store) => (next) => async (action) => {
     if (localStorage.getItem('token')) {
       localStorage.removeItem('token');
       removeInstanceAuthorization();
+      store.dispatch(saveLogout());
     }
   }
   next(action);
