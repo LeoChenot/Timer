@@ -5,7 +5,7 @@ import { CHECK_LOGIN_WITH_TOKEN, LOGIN } from '../actions/auth';
 import { saveUserData } from '../actions/user';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: process.env.BASE_URL,
 });
 
 const setInstanceAuthorization = () => {
@@ -23,7 +23,7 @@ const authMW = (store) => (next) => async (action) => {
   if (action.type === LOGIN) {
     const state = store.getState();
     try {
-      const response = await instance.post('/login', {
+      const response = await instance.post('/api/login', {
         email: state.loginModalReducer.emailValue,
         password: state.loginModalReducer.passwordValue,
       });
@@ -44,7 +44,7 @@ const authMW = (store) => (next) => async (action) => {
   else if (action.type === CHECK_LOGIN_WITH_TOKEN) {
     if (localStorage.getItem('token')) {
       try {
-        const response = await instance.post('/check', {
+        const response = await instance.post('/api/check', {
           token: localStorage.getItem('token'),
         });
         store.dispatch(saveUserData(response.data.user));
