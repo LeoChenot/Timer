@@ -8,10 +8,11 @@ import './index.scss';
 
 function App() {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    console.log('check');
     dispatch(checkLoginWithToken());
   }, []);
+
   return (
     <div className="app">
       <Header />

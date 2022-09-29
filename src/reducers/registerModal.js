@@ -1,49 +1,31 @@
 import {
-  CHANGE_SHOW_PASSWORD_1,
-  CHANGE_SHOW_PASSWORD_2,
-  SET_NEW_EMAIL_VALUE,
-  SET_NEW_PASSWORD_1_VALUE,
-  SET_NEW_PASSWORD_2_VALUE,
+  SET_NEW_STRING,
+  TOGGLE_BOOLEAN,
 } from '../actions/registerModal';
 
 const initialState = {
-  emailValue: '',
-  password1Value: '',
-  password2Value: '',
+  email: '',
+  password1: '',
+  password2: '',
+  emailHelperText: '',
+  password1HelperText: '',
+  password2HelperText: '',
   showPassword1: false,
   showPassword2: false,
 };
 
 const registerModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_NEW_EMAIL_VALUE: {
+    case SET_NEW_STRING: {
       return {
         ...state,
-        emailValue: action.newEmailValue,
+        [action.state]: action.newString,
       };
     }
-    case SET_NEW_PASSWORD_1_VALUE: {
+    case TOGGLE_BOOLEAN: {
       return {
         ...state,
-        password1Value: action.newPassword1Value,
-      };
-    }
-    case SET_NEW_PASSWORD_2_VALUE: {
-      return {
-        ...state,
-        password2Value: action.newPassword2Value,
-      };
-    }
-    case CHANGE_SHOW_PASSWORD_1: {
-      return {
-        ...state,
-        showPassword1: !state.showPassword1,
-      };
-    }
-    case CHANGE_SHOW_PASSWORD_2: {
-      return {
-        ...state,
-        showPassword2: !state.showPassword2,
+        [action.state]: !state[action.state],
       };
     }
     default: {

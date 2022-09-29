@@ -9,32 +9,7 @@ import {
 } from '../actions/timers';
 
 const initialState = {
-  timerListResponse: [
-    {
-      id: 1,
-      name: 'Spaghettis',
-      delay: 360,
-      currentDelay: 360,
-      isActive: false,
-      intervalId: undefined,
-    },
-    {
-      id: 2,
-      name: 'Coquillettes',
-      delay: 420,
-      currentDelay: 420,
-      isActive: false,
-      intervalId: undefined,
-    },
-    {
-      id: 3,
-      name: 'Farfalle',
-      delay: 600,
-      currentDelay: 600,
-      isActive: false,
-      intervalId: undefined,
-    },
-  ],
+  timerListResponse: undefined,
 };
 
 const timersReducer = (state = initialState, action = {}) => {
@@ -42,7 +17,7 @@ const timersReducer = (state = initialState, action = {}) => {
     case START_TIMER_BY_ID: {
       return {
         ...state,
-        timerListResponse: state.timerListResponse.map(
+        timerListResponse: state.timerListResponse && state.timerListResponse.map(
           (timer) => (timer.id === action.timerId ? { ...timer, isActive: true } : timer),
         ),
       };
@@ -50,7 +25,7 @@ const timersReducer = (state = initialState, action = {}) => {
     case STOP_TIMER_BY_ID: {
       return {
         ...state,
-        timerListResponse: state.timerListResponse.map(
+        timerListResponse: state.timerListResponse && state.timerListResponse.map(
           (timer) => (timer.id === action.timerId ? { ...timer, isActive: false } : timer),
         ),
       };
@@ -58,7 +33,7 @@ const timersReducer = (state = initialState, action = {}) => {
     case RESET_TIMER_BY_ID: {
       return {
         ...state,
-        timerListResponse: state.timerListResponse.map(
+        timerListResponse: state.timerListResponse && state.timerListResponse.map(
           (timer) => (timer.id === action.timerId ? {
             ...timer,
             currentDelay: timer.delay,
@@ -69,7 +44,7 @@ const timersReducer = (state = initialState, action = {}) => {
     case DECREASE_TIMER_BY_ID: {
       return {
         ...state,
-        timerListResponse: state.timerListResponse.map(
+        timerListResponse: state.timerListResponse && state.timerListResponse.map(
           (timer) => (timer.id === action.timerId ? {
             ...timer,
             currentDelay: timer.currentDelay - 1,
@@ -80,7 +55,7 @@ const timersReducer = (state = initialState, action = {}) => {
     case SAVE_INTERVAL_ID: {
       return {
         ...state,
-        timerListResponse: state.timerListResponse.map(
+        timerListResponse: state.timerListResponse && state.timerListResponse.map(
           (timer) => (timer.id === action.timerId ? {
             ...timer,
             intervalId: action.intervalId,
@@ -91,7 +66,7 @@ const timersReducer = (state = initialState, action = {}) => {
     case DELETE_INTERVAL_ID: {
       return {
         ...state,
-        timerListResponse: state.timerListResponse.map(
+        timerListResponse: state.timerListResponse && state.timerListResponse.map(
           (timer) => (timer.id === action.timerId ? {
             ...timer,
             intervalId: undefined,
@@ -102,7 +77,14 @@ const timersReducer = (state = initialState, action = {}) => {
     case SAVE_TIMER_LIST_RESPONSE: {
       return {
         ...state,
-        timerListResponse: action.timerListResponse,
+        timerListResponse: action.timerListResponse.map((timer) => ({
+          id: timer.id,
+          name: timer.name,
+          delay: timer.delay,
+          currentDelay: timer.delay,
+          isActive: false,
+          intervalId: undefined,
+        })),
       };
     }
     default: {

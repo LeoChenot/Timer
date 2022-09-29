@@ -1,33 +1,30 @@
-import {
-  CHANGE_SHOW_PASSWORD,
-  SET_NEW_EMAIL_VALUE,
-  SET_NEW_PASSWORD_VALUE,
-} from '../actions/loginModal';
+import { SET_NEW_BOOLEAN, SET_NEW_STRING, TOGGLE_BOOLEAN } from '../actions/loginModal';
 
 const initialState = {
-  emailValue: '',
-  passwordValue: '',
+  loginLoading: false,
+  email: '',
+  password: '',
   showPassword: false,
 };
 
 const loginModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_NEW_EMAIL_VALUE: {
+    case SET_NEW_STRING: {
       return {
         ...state,
-        emailValue: action.newEmailValue,
+        [action.state]: action.newString,
       };
     }
-    case SET_NEW_PASSWORD_VALUE: {
+    case SET_NEW_BOOLEAN: {
       return {
         ...state,
-        passwordValue: action.newPasswordValue,
+        [action.state]: action.newBoolean,
       };
     }
-    case CHANGE_SHOW_PASSWORD: {
+    case TOGGLE_BOOLEAN: {
       return {
         ...state,
-        showPassword: !state.showPassword,
+        [action.state]: !state[action.state],
       };
     }
     default: {

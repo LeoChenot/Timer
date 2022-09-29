@@ -38,8 +38,9 @@ export const deleteIntervalId = (timerId) => ({
 // CRUD Timer
 
 export const FETCH_CREATE_TIMER = 'FETCH_CREATE_TIMER';
-export const fetchCreateTimer = () => ({
+export const fetchCreateTimer = (delay) => ({
   type: FETCH_CREATE_TIMER,
+  delay,
 });
 
 export const FETCH_READ_TIMER = 'FETCH_READ_TIMER';
@@ -53,8 +54,9 @@ export const fetchUpdateTimerById = () => ({
 });
 
 export const FETCH_DELETE_TIMER_BY_ID = 'FETCH_DELETE_TIMER_BY_ID';
-export const fetchDeleteTimerById = () => ({
+export const fetchDeleteTimerById = (timerId) => ({
   type: FETCH_DELETE_TIMER_BY_ID,
+  timerId,
 });
 
 // je sais pas

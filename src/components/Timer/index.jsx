@@ -1,11 +1,12 @@
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { TextField } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { IconButton, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 import './style.scss';
+import { Clear } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import {
   decreaseTimerById,
   deleteIntervalId,
@@ -16,9 +17,10 @@ import {
 } from '../../actions/timers';
 
 function Timer({
-  id, name, delay, currentDelay, isActive, intervalId,
+  id, name, delay, currentDelay, isActive, intervalId, listId,
 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   let editname = false;
 
@@ -38,11 +40,6 @@ function Timer({
   const test = () => {
     console.log('je veux edit le name');
     editname = !editname;
-  };
-
-  const wouldYouDelete = () => {
-    console.log('Are you sure you want to delete this timer');
-    // const response = confirm('Are you sure you want to delete this timer');
   };
 
   const startTimer = () => {
@@ -71,7 +68,13 @@ function Timer({
 
   return (
     <div className="timer">
-      <button className="timer__delete" type="button" title="Delete" onClick={wouldYouDelete}>✖</button>
+      <IconButton
+        className="timer__deleteButton"
+        aria-label="add"
+        onClick={() => navigate(`/lists/${listId}/timers/${id}/delete`)}
+      >
+        <Clear className="timer__deleteButton-icon" />
+      </IconButton>
       {editname ? (
         <div className="timer__name--edit">
           <TextField id="standard-basic" label={name} variant="standard" />
@@ -79,8 +82,8 @@ function Timer({
       ) : (
         <div className="timer__name">
           <span onDoubleClick={test}>{name}</span>
-          <button type="button">
-            <FontAwesomeIcon icon={faPencil} />
+          <button type="button" onClick={() => navigate(`/lists/${listId}/timers/${id}/edit`)}>
+            <EditIcon />
           </button>
         </div>
       )}
@@ -118,6 +121,7 @@ Timer.propTypes = {
   currentDelay: PropTypes.number.isRequired,
   isActive: PropTypes.bool.isRequired,
   intervalId: PropTypes.number,
+  listId: PropTypes.number.isRequired,
 };
 
 export default Timer;

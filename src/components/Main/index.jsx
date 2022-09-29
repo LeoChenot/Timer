@@ -1,21 +1,28 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Routes, Route, useLocation, useSearchParams,
+  Routes, Route, useLocation, Navigate,
 } from 'react-router-dom';
 import { hideAllModals, showLoginModal, showRegisterModal } from '../../actions/modals';
+import CreateListModal from '../CreateListModal';
+import CreateTimerModal from '../CreateTimerModal';
+import DeleteListModal from '../DeleteListModal';
+import DeleteTimerModal from '../DeleteTimerModal';
+import EditTimerModal from '../EditTimerModal';
+import Error404 from '../Error404';
+import Home from '../Home';
 import LoginModal from '../LoginModal';
 import Logout from '../Logout';
+import Profile from '../Profile';
 import RegisterModal from '../RegisterModal';
 // import { fetchReadTimer } from '../../actions/timers';
-import Timer from '../Timer';
 
 // import PropTypes from 'prop-types';
 import './style.scss';
 
 function Main() {
   const dispatch = useDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   // const navigate = useNavigate();
   // useEffect(() => {
@@ -33,16 +40,7 @@ function Main() {
     }
   }, [search]);
 
-  const { timerListResponse } = useSelector((state) => state.timersReducer);
-  const { auth } = useSelector((state) => state.userReducer);
   const { loginModal, registerModal } = useSelector((state) => state.modalsReducer);
-
-  useEffect(() => {
-    if (auth) {
-      searchParams.delete(search.replace('?', ''));
-      setSearchParams(searchParams);
-    }
-  }, [search]);
 
   // useEffect(() => {
   //   timerListResponse.forEach((timer) => {
@@ -53,36 +51,28 @@ function Main() {
   return (
     <main className="main">
       <Routes>
+        <Route path="/" element={<Home />}>
+          <Route path="/lists/create" element={<CreateListModal />} />
+          <Route path="/lists/:listId/delete" element={<DeleteListModal />} />
+          <Route path="/lists/:listId/timers/create" element={<CreateTimerModal />} />
+          <Route path="/lists/:listId/timers/:timerId/edit" element={<EditTimerModal />} />
+          <Route path="/lists/:listId/timers/:timerId/delete" element={<DeleteTimerModal />} />
+        </Route>
+        <Route path="/error" element={<Error404 />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="*" element={<Navigate to="/error" />} /> */}
       </Routes>
-      {!auth ? (
-        <div>
-          <h1>Bienvenue sur Timers</h1>
-          <p>Veuillez vous connecter pour avoir accès au site</p>
-          {loginModal && (
-            <LoginModal />
-          )}
-          {registerModal && (
-            <RegisterModal />
-          )}
-        </div>
-      ) : (
-        <div>
-          <h2>Timers :</h2>
-          <div className="main__timersList">
-            {timerListResponse.map((timer) => (
-              <Timer
-                key={timer.id}
-                id={timer.id}
-                name={timer.name}
-                delay={timer.delay}
-                currentDelay={timer.currentDelay}
-                isActive={timer.isActive}
-                intervalId={timer.intervalId}
-              />
-            ))}
-          </div>
-        </div>
+      {/* {background && (
+        <Routes>
+          <Route path="modal" element={<CreateTimerModal />} />
+        </Routes>
+      )} */}
+      {loginModal && (
+        <LoginModal />
+      )}
+      {registerModal && (
+        <RegisterModal />
       )}
     </main>
   );

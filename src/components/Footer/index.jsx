@@ -6,7 +6,9 @@ import './style.scss';
 function Footer() {
   return (
     <div className="footer">
-      Copyright © 2022
+      Copyright ©
+      {' '}
+      {new Date().getFullYear()}
     </div>
   );
 }

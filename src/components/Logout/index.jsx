@@ -14,7 +14,6 @@ function Logout() {
   useEffect(() => {
     if (!auth) {
       navigate('/');
-      console.log('bonjour');
     }
   }, [auth]);
 

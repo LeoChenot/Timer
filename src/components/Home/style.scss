@@ -1,0 +1,47 @@
+@use "../../styles/vars.scss";
+@use "sass:color";
+
+.home {
+
+  &__connected {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    align-items: flex-start;
+
+    &-yolobutton {
+      height: fit-content;
+      width: fit-content;
+  
+      &:hover, &.Mui-focusVisible {
+        background-color: rgba(0, 0, 0, 0) !important;
+      }
+      
+      & &-icon {
+        transition: 400ms;
+      }
+  
+      &:hover &-icon {
+        transform: scale(1.2);
+        transition: 200ms; 
+      }
+  
+      &:active &-icon {
+        transform: scale(1.4);
+        transition: 200ms; 
+      }
+  
+      &-icon {
+        font-size: 2rem !important;
+        color: #FFFFFF;
+        background-color: green;
+        border-radius: 100%;
+        padding: 0.25rem;
+      }
+    }
+  }
+}
+
+.main__timersList {
+  position: relative;
+}

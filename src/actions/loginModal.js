@@ -1,16 +1,19 @@
-export const SET_NEW_EMAIL_VALUE = 'SET_NEW_EMAIL_VALUE';
-export const setNewEmailValue = (newEmailValue) => ({
-  type: SET_NEW_EMAIL_VALUE,
-  newEmailValue,
+export const SET_NEW_STRING = 'SET_NEW_STRING';
+export const setNewString = (state, newString) => ({
+  type: SET_NEW_STRING,
+  state,
+  newString,
 });
 
-export const SET_NEW_PASSWORD_VALUE = 'SET_NEW_PASSWORD_VALUE';
-export const setNewPasswordValue = (newPasswordValue) => ({
-  type: SET_NEW_PASSWORD_VALUE,
-  newPasswordValue,
+export const SET_NEW_BOOLEAN = 'SET_NEW_BOOLEAN';
+export const setNewBoolean = (state, newBoolean) => ({
+  type: SET_NEW_BOOLEAN,
+  state,
+  newBoolean,
 });
 
-export const CHANGE_SHOW_PASSWORD = 'CHANGE_SHOW_PASSWORD';
-export const changeShowPassword = () => ({
-  type: CHANGE_SHOW_PASSWORD,
+export const TOGGLE_BOOLEAN = 'TOGGLE_BOOLEAN';
+export const toggleBoolean = (state) => ({
+  type: TOGGLE_BOOLEAN,
+  state,
 });

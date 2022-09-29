@@ -1,19 +1,18 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSignIn, faPen, faUser, faSignOut,
-} from '@fortawesome/free-solid-svg-icons';
-
+import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import EditIcon from '@mui/icons-material/Edit';
 import { Link, useLocation } from 'react-router-dom';
 import './style.scss';
 import { useSelector } from 'react-redux';
 
 function Header() {
-  const { search } = useLocation();
+  const { pathname } = useLocation();
 
-  const { auth, id } = useSelector((state) => state.userReducer);
+  const { auth } = useSelector((state) => state.userReducer);
 
   return (
     <header className="header">
@@ -28,23 +27,23 @@ function Header() {
       </div>
       {auth ? (
         <div className="header__container header__container--right">
-          <Link to={`/profile/${id}`}>
-            <FontAwesomeIcon icon={faUser} />
+          <Link to="/profile">
+            <PersonIcon />
             Profile
           </Link>
           <Link to="/logout">
-            <FontAwesomeIcon icon={faSignOut} />
+            <LogoutIcon />
             Logout
           </Link>
         </div>
       ) : (
         <div className="header__container header__container--right">
-          <Link to={search === '?login' ? '/' : '/?login'}>
-            <FontAwesomeIcon icon={faSignIn} />
+          <Link to={`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}/?login`}>
+            <LoginIcon />
             Login
           </Link>
-          <Link to={search === '?register' ? '/' : '/?register'}>
-            <FontAwesomeIcon icon={faPen} />
+          <Link to={`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}/?register`}>
+            <EditIcon />
             Register
           </Link>
         </div>
