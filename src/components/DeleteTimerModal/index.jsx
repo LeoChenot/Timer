@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
+  FormHelperText,
   IconButton,
 } from '@mui/material';
 
@@ -10,7 +11,8 @@ import './style.scss';
 import { Clear } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectListId, selectTimer } from '../../actions/deleteTimerModal';
+import { LoadingButton } from '@mui/lab';
+import { resetStatesDeleteTimerModal, setStateDeleteTimerModal } from '../../actions/deleteTimerModal';
 import TimerDemo from '../TimerDemo';
 import { fetchDeleteTimer } from '../../actions/user';
 
@@ -22,26 +24,37 @@ function DeleteTimerModal() {
   const listId = Number(params.listId);
   const timerId = Number(params.timerId);
 
-  const { timerLists } = useSelector((state) => state.userReducer);
-  const { selectedTimer } = useSelector((state) => state.deleteTimerModalReducer);
+  const { lists } = useSelector((state) => state.userReducer);
+  const {
+    selectedTimer,
+    responseMessage,
+    loading,
+  } = useSelector((state) => state.deleteTimerModalReducer);
+
+  const handleSetState = (state, value) => {
+    dispatch(setStateDeleteTimerModal(state, value));
+  };
 
   useEffect(() => {
-    if (timerLists) {
-      const listFound = timerLists.find((list) => list.id === listId);
+    if (lists) {
+      const listFound = lists.find((list) => list.id === listId);
       const timerFound = listFound.timers.find((timer) => timer.id === timerId);
-      dispatch(selectTimer(timerFound));
+      handleSetState('selectedTimer', timerFound);
     }
-  }, [timerLists]);
+  }, [lists]);
 
   useEffect(() => {
-    dispatch(selectListId(listId));
+    handleSetState('selectedListId', listId);
   }, []);
 
   const handleSubmitDelete = (event) => {
     event.preventDefault();
-    dispatch(fetchDeleteTimer());
-    navigate('/');
+    dispatch(fetchDeleteTimer(navigate));
   };
+
+  useEffect(() => () => {
+    dispatch(resetStatesDeleteTimerModal());
+  }, []);
 
   return (
     <div className="modal">
@@ -59,6 +72,7 @@ function DeleteTimerModal() {
               currentDelay={selectedTimer.currentDelay}
               isActive={selectedTimer.isActive}
               intervalId={selectedTimer.intervalId}
+              listId={listId}
             />
           )}
         </div>
@@ -68,8 +82,13 @@ function DeleteTimerModal() {
           }}
           >
             <Button variant="contained" onClick={() => navigate('/')}>No</Button>
-            <Button variant="contained" type="submit">Yes</Button>
+            {loading ? (
+              <LoadingButton loading variant="contained">Yes</LoadingButton>
+            ) : (
+              <Button variant="contained" type="submit">Yes</Button>
+            )}
           </FormControl>
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>

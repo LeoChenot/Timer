@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { checkLoginWithToken } from '../../actions/auth';
+import { fetchReadUserWithToken } from '../../actions/user';
 import Footer from '../Footer';
 import Header from '../Header';
 import Main from '../Main';
@@ -10,7 +10,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(checkLoginWithToken());
+    dispatch(fetchReadUserWithToken());
   }, []);
 
   return (

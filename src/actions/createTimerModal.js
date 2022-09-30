@@ -1,18 +1,11 @@
-export const SET_NEW_STRING = 'SET_NEW_STRING';
-export const setNewString = (state, newString) => ({
-  type: SET_NEW_STRING,
+export const SET_STATE_CREATE_TIMER_MODAL = 'SET_STATE_CREATE_TIMER_MODAL';
+export const setStateCreateTimerModal = (state, value) => ({
+  type: SET_STATE_CREATE_TIMER_MODAL,
   state,
-  newString,
+  value,
 });
 
-export const SELECT_LIST_ID = 'SELECT_LIST_ID';
-export const selectListId = (listId) => ({
-  type: SELECT_LIST_ID,
-  listId,
-});
-
-export const SET_NEW_DELAY = 'SET_NEW_DELAY';
-export const setNewDelay = (newDelay) => ({
-  type: SET_NEW_DELAY,
-  newDelay,
+export const RESET_STATES_CREATE_TIMER_MODAL = 'RESET_STATES_CREATE_TIMER_MODAL';
+export const resetStatesCreateTimerModal = () => ({
+  type: RESET_STATES_CREATE_TIMER_MODAL,
 });

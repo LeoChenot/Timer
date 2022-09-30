@@ -1,6 +1,6 @@
 /* eslint-disable brace-style */
 /* eslint-disable no-useless-escape */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Visibility, VisibilityOff, Clear } from '@mui/icons-material';
 import {
   Button,
@@ -17,29 +17,15 @@ import { useDispatch, useSelector } from 'react-redux';
 // import PropTypes from 'prop-types';
 import './style.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  setNewString,
-  toggleBoolean,
-} from '../../actions/registerModal';
-import { register } from '../../actions/auth';
+import { LoadingButton } from '@mui/lab';
+import { resetStatesRegisterModal, setStateRegisterModal, toggleStateRegisterModal } from '../../actions/registerModal';
+import { fetchCreateUser } from '../../actions/user';
 
 function RegisterModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const handleSetNewString = (state, value) => {
-    dispatch(setNewString(state, value));
-  };
-
-  const handleToggleBoolean = (state) => {
-    dispatch(toggleBoolean(state));
-  };
-
-  const handleSubmitRegisterForm = (event) => {
-    event.preventDefault();
-    dispatch(register());
-  };
+  const emailInput = useRef();
 
   const {
     email,
@@ -50,46 +36,70 @@ function RegisterModal() {
     password2HelperText,
     showPassword1,
     showPassword2,
+    responseMessage,
+    loading,
   } = useSelector((state) => state.registerModalReducer);
 
-  const handleCloseThisModal = () => {
-    navigate(`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}`);
+  const handleSetState = (state, value) => {
+    dispatch(setStateRegisterModal(state, value));
+  };
+
+  const handleToggleState = (state) => {
+    dispatch(toggleStateRegisterModal(state));
+  };
+
+  const handleSubmitRegisterForm = (event) => {
+    event.preventDefault();
+    dispatch(fetchCreateUser(navigate, pathname));
   };
 
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   useEffect(() => {
     if (email.length === 0) {
-      handleSetNewString('emailHelperText', 'Email must not be empty');
+      handleSetState('emailHelperText', 'Email must not be empty');
     }
     else {
       const emailIsValid = email.match(emailRegex);
       if (emailIsValid) {
-        handleSetNewString('emailHelperText', '');
+        handleSetState('emailHelperText', '');
       }
       else {
-        handleSetNewString('emailHelperText', 'Email is not valid');
+        handleSetState('emailHelperText', 'Email is not valid');
       }
     }
   }, [email]);
 
+  useEffect(() => {
+    emailInput.current.focus();
+  }, []);
+
+  useEffect(() => () => {
+    dispatch(resetStatesRegisterModal());
+  }, []);
+
   return (
     <div className="modal">
       <div className="modal__content">
-        <IconButton className="modal__content-closeButton" aria-label="add" onClick={handleCloseThisModal}>
+        <IconButton
+          className="modal__content-closeButton"
+          aria-label="add"
+          onClick={() => navigate(`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}`)}
+        >
           <Clear className="modal__content-closeButton-icon" />
         </IconButton>
         <h2 className="modal__content-title">Register</h2>
         <form className="modal__content-form" onSubmit={handleSubmitRegisterForm}>
           <FormControl>
             <TextField
+              inputRef={emailInput}
               inputProps={{ className: 'emailtest' }}
               label="Email"
               autoComplete="username"
               variant="outlined"
               type="text"
               value={email}
-              onChange={(event) => handleSetNewString('email', event.target.value)}
+              onChange={(event) => handleSetState('email', event.target.value)}
               required
             />
             <FormHelperText id="my-helper-text">{emailHelperText}</FormHelperText>
@@ -100,12 +110,12 @@ function RegisterModal() {
               id="password1"
               type={showPassword1 ? 'text' : 'password'}
               value={password1}
-              onChange={(event) => handleSetNewString('password1', event.target.value)}
+              onChange={(event) => handleSetState('password1', event.target.value)}
               endAdornment={(
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => handleToggleBoolean('showPassword1')}
+                    onClick={() => handleToggleState('showPassword1')}
                     edge="end"
                   >
                     {showPassword1 ? <VisibilityOff /> : <Visibility />}
@@ -124,12 +134,12 @@ function RegisterModal() {
               id="password2"
               type={showPassword2 ? 'text' : 'password'}
               value={password2}
-              onChange={(event) => handleSetNewString('password2', event.target.value)}
+              onChange={(event) => handleSetState('password2', event.target.value)}
               endAdornment={(
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => handleToggleBoolean('showPassword2')}
+                    onClick={() => handleToggleState('showPassword2')}
                     edge="end"
                   >
                     {showPassword2 ? <VisibilityOff /> : <Visibility />}
@@ -142,7 +152,12 @@ function RegisterModal() {
             />
             <FormHelperText id="my-helper-text">{password2HelperText}</FormHelperText>
           </FormControl>
-          <Button type="submit" variant="contained">Register</Button>
+          {loading ? (
+            <LoadingButton loading variant="contained">Register</LoadingButton>
+          ) : (
+            <Button variant="contained" type="submit">Register</Button>
+          )}
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>

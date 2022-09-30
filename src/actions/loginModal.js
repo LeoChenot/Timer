@@ -1,19 +1,17 @@
-export const SET_NEW_STRING = 'SET_NEW_STRING';
-export const setNewString = (state, newString) => ({
-  type: SET_NEW_STRING,
+export const SET_STATE_LOGIN_MODAL = 'SET_STATE_LOGIN_MODAL';
+export const setStateLoginModal = (state, value) => ({
+  type: SET_STATE_LOGIN_MODAL,
   state,
-  newString,
+  value,
 });
 
-export const SET_NEW_BOOLEAN = 'SET_NEW_BOOLEAN';
-export const setNewBoolean = (state, newBoolean) => ({
-  type: SET_NEW_BOOLEAN,
+export const TOGGLE_STATE_LOGIN_MODAL = 'TOGGLE_STATE_LOGIN_MODAL';
+export const toggleStateLoginModal = (state) => ({
+  type: TOGGLE_STATE_LOGIN_MODAL,
   state,
-  newBoolean,
 });
 
-export const TOGGLE_BOOLEAN = 'TOGGLE_BOOLEAN';
-export const toggleBoolean = (state) => ({
-  type: TOGGLE_BOOLEAN,
-  state,
+export const RESET_STATES_LOGIN_MODAL = 'RESET_STATES_LOGIN_MODAL';
+export const resetStatesLoginModal = () => ({
+  type: RESET_STATES_LOGIN_MODAL,
 });

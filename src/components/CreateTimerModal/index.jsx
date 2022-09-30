@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   FormControl,
@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import './style.scss';
 import { Clear } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { selectListId, setNewDelay, setNewString } from '../../actions/createTimerModal';
+import { LoadingButton } from '@mui/lab';
+import { resetStatesCreateTimerModal, setStateCreateTimerModal } from '../../actions/createTimerModal';
 import { fetchCreateTimer } from '../../actions/user';
 
 function CreateTimerModal() {
@@ -22,30 +23,39 @@ function CreateTimerModal() {
   const params = useParams();
   const listId = Number(params.listId);
 
+  const nameInput = useRef();
+
   const {
     name,
     hours,
     minutes,
     seconds,
+    responseMessage,
+    loading,
   } = useSelector((state) => state.createTimerModalReducer);
 
-  const handleSetNewString = (state, value) => {
-    dispatch(setNewString(state, value));
+  const handleSetState = (state, value) => {
+    dispatch(setStateCreateTimerModal(state, value));
   };
 
   const handleSubmitCreate = (event) => {
     event.preventDefault();
-    dispatch(fetchCreateTimer());
-    navigate('/');
+    dispatch(fetchCreateTimer(navigate));
   };
 
   useEffect(() => {
-    dispatch(selectListId(listId));
+    nameInput.current.focus();
+    handleSetState('selectedListId', listId);
   }, []);
 
   useEffect(() => {
-    dispatch(setNewDelay((Number(hours) * 60 * 60) + (Number(minutes) * 60) + (Number(seconds))));
+    const delay = (Number(hours) * 60 * 60) + (Number(minutes) * 60) + (Number(seconds));
+    handleSetState('delay', delay);
   }, [hours, minutes, seconds]);
+
+  useEffect(() => () => {
+    dispatch(resetStatesCreateTimerModal());
+  }, []);
 
   return (
     <div className="modal">
@@ -57,12 +67,13 @@ function CreateTimerModal() {
         <form className="modal__content-form" onSubmit={handleSubmitCreate}>
           <FormControl>
             <TextField
+              inputRef={nameInput}
               id="outlined-basic"
               label="Name"
               variant="outlined"
               type="text"
               value={name}
-              onChange={(event) => handleSetNewString('name', event.target.value)}
+              onChange={(event) => handleSetState('name', event.target.value)}
               required
             />
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
@@ -75,7 +86,7 @@ function CreateTimerModal() {
                 variant="outlined"
                 type="number"
                 value={hours}
-                onChange={(event) => handleSetNewString('hours', event.target.value)}
+                onChange={(event) => handleSetState('hours', event.target.value)}
                 InputProps={{ inputProps: { min: 0, max: 24 } }}
                 required
               />
@@ -85,7 +96,7 @@ function CreateTimerModal() {
                 variant="outlined"
                 type="number"
                 value={minutes}
-                onChange={(event) => handleSetNewString('minutes', event.target.value)}
+                onChange={(event) => handleSetState('minutes', event.target.value)}
                 InputProps={{ inputProps: { min: 0, max: 60 } }}
                 required
               />
@@ -95,14 +106,19 @@ function CreateTimerModal() {
                 variant="outlined"
                 type="number"
                 value={seconds}
-                onChange={(event) => handleSetNewString('seconds', event.target.value)}
+                onChange={(event) => handleSetState('seconds', event.target.value)}
                 InputProps={{ inputProps: { min: 0, max: 60 } }}
                 required
               />
             </FormGroup>
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
           </FormControl>
-          <Button variant="contained" type="submit">Add</Button>
+          {loading ? (
+            <LoadingButton loading variant="contained">Add</LoadingButton>
+          ) : (
+            <Button variant="contained" type="submit">Add</Button>
+          )}
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>

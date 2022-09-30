@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   FormControl,
@@ -13,10 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import './style.scss';
 import { Clear } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
+import { resetStatesEditTimerModal, setStateEditTimerModal } from '../../actions/editTimerModal';
 import { fetchUpdateTimer } from '../../actions/user';
-import {
-  selectListId, selectTimer, setNewDelay, setNewString,
-} from '../../actions/editTimerModal';
 
 function EditTimerModal() {
   const dispatch = useDispatch();
@@ -26,7 +25,9 @@ function EditTimerModal() {
   const listId = Number(params.listId);
   const timerId = Number(params.timerId);
 
-  const { timerLists } = useSelector((state) => state.userReducer);
+  const nameInput = useRef();
+
+  const { lists } = useSelector((state) => state.userReducer);
   const { selectedTimer } = useSelector((state) => state.editTimerModalReducer);
 
   const {
@@ -34,19 +35,21 @@ function EditTimerModal() {
     hours,
     minutes,
     seconds,
+    responseMessage,
+    loading,
   } = useSelector((state) => state.editTimerModalReducer);
 
-  const handleSetNewString = (state, value) => {
-    dispatch(setNewString(state, value));
+  const handleSetState = (state, value) => {
+    dispatch(setStateEditTimerModal(state, value));
   };
 
   useEffect(() => {
-    if (timerLists) {
-      const listFound = timerLists.find((list) => list.id === listId);
+    if (lists) {
+      const listFound = lists.find((list) => list.id === listId);
       const timerFound = listFound.timers.find((timer) => timer.id === timerId);
-      dispatch(selectTimer(timerFound));
+      handleSetState('selectedTimer', timerFound);
     }
-  }, [timerLists]);
+  }, [lists]);
 
   useEffect(() => {
     if (selectedTimer) {
@@ -54,26 +57,31 @@ function EditTimerModal() {
       const selectedTimerMinutes = Math.floor((selectedTimer.delay % 3600) / 60);
       const selectedTimerSeconds = (selectedTimer.delay % 3600) % 60;
 
-      handleSetNewString('name', selectedTimer.name);
-      handleSetNewString('hours', selectedTimerHours);
-      handleSetNewString('minutes', selectedTimerMinutes);
-      handleSetNewString('seconds', selectedTimerSeconds);
+      handleSetState('name', selectedTimer.name);
+      handleSetState('hours', selectedTimerHours);
+      handleSetState('minutes', selectedTimerMinutes);
+      handleSetState('seconds', selectedTimerSeconds);
     }
   }, [selectedTimer]);
 
   const handleSubmitEdit = (event) => {
     event.preventDefault();
-    dispatch(fetchUpdateTimer());
-    navigate('/');
+    dispatch(fetchUpdateTimer(navigate));
   };
 
   useEffect(() => {
-    dispatch(selectListId(listId));
+    nameInput.current.focus();
+    handleSetState('selectedListId', listId);
   }, []);
 
   useEffect(() => {
-    dispatch(setNewDelay((Number(hours) * 60 * 60) + (Number(minutes) * 60) + (Number(seconds))));
+    const delay = (Number(hours) * 60 * 60) + (Number(minutes) * 60) + (Number(seconds));
+    handleSetState('delay', delay);
   }, [hours, minutes, seconds]);
+
+  useEffect(() => () => {
+    dispatch(resetStatesEditTimerModal());
+  }, []);
 
   return (
     <div className="modal">
@@ -85,12 +93,13 @@ function EditTimerModal() {
         <form className="modal__content-form" onSubmit={handleSubmitEdit}>
           <FormControl>
             <TextField
+              inputRef={nameInput}
               id="outlined-basic"
               label="Name"
               variant="outlined"
               type="text"
               value={name}
-              onChange={(event) => handleSetNewString('name', event.target.value)}
+              onChange={(event) => handleSetState('name', event.target.value)}
               required
             />
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
@@ -103,7 +112,7 @@ function EditTimerModal() {
                 variant="outlined"
                 type="number"
                 value={hours}
-                onChange={(event) => handleSetNewString('hours', event.target.value)}
+                onChange={(event) => handleSetState('hours', event.target.value)}
                 InputProps={{ inputProps: { min: 0, max: 24 } }}
                 required
               />
@@ -113,7 +122,7 @@ function EditTimerModal() {
                 variant="outlined"
                 type="number"
                 value={minutes}
-                onChange={(event) => handleSetNewString('minutes', event.target.value)}
+                onChange={(event) => handleSetState('minutes', event.target.value)}
                 InputProps={{ inputProps: { min: 0, max: 60 } }}
                 required
               />
@@ -123,14 +132,19 @@ function EditTimerModal() {
                 variant="outlined"
                 type="number"
                 value={seconds}
-                onChange={(event) => handleSetNewString('seconds', event.target.value)}
+                onChange={(event) => handleSetState('seconds', event.target.value)}
                 InputProps={{ inputProps: { min: 0, max: 60 } }}
                 required
               />
             </FormGroup>
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
           </FormControl>
-          <Button variant="contained" type="submit">Edit</Button>
+          {loading ? (
+            <LoadingButton loading variant="contained">Edit</LoadingButton>
+          ) : (
+            <Button variant="contained" type="submit">Edit</Button>
+          )}
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>

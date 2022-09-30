@@ -31,7 +31,7 @@ function Header() {
             <PersonIcon />
             Profile
           </Link>
-          <Link to="/logout">
+          <Link to={`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}/?logout`}>
             <LogoutIcon />
             Logout
           </Link>

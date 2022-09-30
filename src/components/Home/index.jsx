@@ -9,27 +9,21 @@ import Timer from '../Timer';
 
 // import PropTypes from 'prop-types';
 import './style.scss';
-import { fetchReadTimerLists } from '../../actions/user';
 import TimerDemo from '../TimerDemo';
+import { fetchReadLists } from '../../actions/user';
 
 function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { timerLists } = useSelector((state) => state.userReducer);
+  const { lists } = useSelector((state) => state.userReducer);
   const { auth } = useSelector((state) => state.userReducer);
 
   useEffect(() => {
     if (auth) {
-      console.log('fetchReadTimerLists');
-      dispatch(fetchReadTimerLists());
+      dispatch(fetchReadLists());
     }
   }, [auth]);
-
-  useEffect(() => {
-    console.log('timerLists');
-    console.log(timerLists);
-  }, [timerLists]);
 
   return (
     <div className="home">
@@ -56,7 +50,7 @@ function Home() {
             New List
 
           </Button>
-          {timerLists !== undefined && timerLists.map((list) => (
+          {lists !== undefined && lists.map((list) => (
             <div className="main__timersList" key={list.id}>
               <IconButton
                 className="timer__deleteButton"

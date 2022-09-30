@@ -1,4 +1,9 @@
-import { SAVE_LOGOUT, SAVE_NEW_TIMER_LISTS, SAVE_USER_DATA } from '../actions/user';
+import {
+  SAVE_LISTS,
+  SAVE_LOGOUT,
+  SAVE_USER,
+  SET_STATE_TIMER,
+} from '../actions/user';
 
 const initialState = {
   auth: false,
@@ -6,12 +11,12 @@ const initialState = {
   email: undefined,
   createdAt: undefined,
   updatedAt: undefined,
-  timerLists: undefined,
+  lists: undefined,
 };
 
 const userReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SAVE_USER_DATA: {
+    case SAVE_USER: {
       return {
         ...state,
         auth: true,
@@ -22,22 +27,14 @@ const userReducer = (state = initialState, action = {}) => {
       };
     }
     case SAVE_LOGOUT: {
-      return {
-        ...state,
-        auth: false,
-        id: undefined,
-        email: undefined,
-        createdAt: undefined,
-        updatedAt: undefined,
-        timerLists: undefined,
-      };
+      return initialState;
     }
-    case SAVE_NEW_TIMER_LISTS: {
+    case SAVE_LISTS: {
       return {
         ...state,
-        timerLists: action.newTimerLists.map((lists) => ({
-          ...lists,
-          timers: lists.timers.map((timer) => ({
+        lists: action.lists.map((list) => ({
+          ...list,
+          timers: list.timers.map((timer) => ({
             id: timer.id,
             name: timer.name,
             delay: timer.delay,
@@ -46,6 +43,22 @@ const userReducer = (state = initialState, action = {}) => {
             intervalId: undefined,
           })),
         })),
+      };
+    }
+    case SET_STATE_TIMER: {
+      return {
+        ...state,
+        lists: state.lists && state.lists.map(
+          (list) => (list.id === action.listId ? {
+            ...list,
+            timers: list.timers.map(
+              (timer) => (timer.id === action.timerId ? {
+                ...timer,
+                [action.state]: action.value,
+              } : timer),
+            ),
+          } : list),
+        ),
       };
     }
     default: {

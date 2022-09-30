@@ -1,33 +1,26 @@
-import { SELECT_LIST_ID, SET_NEW_DELAY, SET_NEW_STRING } from '../actions/createTimerModal';
+import { RESET_STATES_CREATE_TIMER_MODAL, SET_STATE_CREATE_TIMER_MODAL } from '../actions/createTimerModal';
 
 const initialState = {
   name: '',
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
+  hours: '0',
+  minutes: '0',
+  seconds: '0',
   delay: undefined,
   selectedListId: undefined,
+  responseMessage: '',
+  loading: false,
 };
 
 const createTimerModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_NEW_STRING: {
+    case SET_STATE_CREATE_TIMER_MODAL: {
       return {
         ...state,
-        [action.state]: action.newString,
+        [action.state]: action.value,
       };
     }
-    case SELECT_LIST_ID: {
-      return {
-        ...state,
-        selectedListId: action.listId,
-      };
-    }
-    case SET_NEW_DELAY: {
-      return {
-        ...state,
-        delay: action.newDelay,
-      };
+    case RESET_STATES_CREATE_TIMER_MODAL: {
+      return initialState;
     }
     default: {
       return {

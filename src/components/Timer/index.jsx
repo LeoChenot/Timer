@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
@@ -7,22 +8,13 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import { Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import {
-  decreaseTimerById,
-  deleteIntervalId,
-  resetTimerById,
-  saveIntervalId,
-  startTimerById,
-  stopTimerById,
-} from '../../actions/timers';
+import { setStateTimer } from '../../actions/user';
 
 function Timer({
   id, name, delay, currentDelay, isActive, intervalId, listId,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  let editname = false;
 
   let hours = Math.floor(currentDelay / 3600);
   if (hours < 10) {
@@ -37,34 +29,21 @@ function Timer({
     seconds = `0${seconds}`;
   }
 
-  const test = () => {
-    console.log('je veux edit le name');
-    editname = !editname;
-  };
-
-  const startTimer = () => {
-    dispatch(startTimerById(id));
-  };
-
-  const stopTimer = () => {
-    dispatch(stopTimerById(id));
-  };
-
-  const resetTimer = () => {
-    dispatch(resetTimerById(id));
+  const handleSetStateTimer = (_listId, timerId, state, value) => {
+    dispatch(setStateTimer(_listId, timerId, state, value));
   };
 
   useEffect(() => {
-    if (isActive) {
-      const intervalIdTemp = setInterval(() => {
-        dispatch(decreaseTimerById(id));
+    if (isActive && currentDelay > 0) {
+      const intervalIdTemp = setTimeout(() => {
+        dispatch(setStateTimer(listId, id, 'currentDelay', currentDelay - 1));
       }, 1000);
-      dispatch(saveIntervalId(id, intervalIdTemp));
+      dispatch(setStateTimer(listId, id, 'intervalId', intervalIdTemp));
     } else {
-      clearInterval(intervalId);
-      dispatch(deleteIntervalId(id));
+      clearTimeout(intervalId);
+      dispatch(setStateTimer(listId, id, 'intervalId', undefined));
     }
-  }, [isActive]);
+  }, [isActive, currentDelay]);
 
   return (
     <div className="timer">
@@ -75,18 +54,12 @@ function Timer({
       >
         <Clear className="timer__deleteButton-icon" />
       </IconButton>
-      {editname ? (
-        <div className="timer__name--edit">
-          <TextField id="standard-basic" label={name} variant="standard" />
-        </div>
-      ) : (
-        <div className="timer__name">
-          <span onDoubleClick={test}>{name}</span>
-          <button type="button" onClick={() => navigate(`/lists/${listId}/timers/${id}/edit`)}>
-            <EditIcon />
-          </button>
-        </div>
-      )}
+      <div className="timer__name">
+        <span>{name}</span>
+        <button type="button" onClick={() => navigate(`/lists/${listId}/timers/${id}/edit`)}>
+          <EditIcon />
+        </button>
+      </div>
       <div className="timer__commands">
         <span>
           {hours}
@@ -96,12 +69,12 @@ function Timer({
           {seconds}
         </span>
         {isActive ? (
-          <button type="button" onClick={stopTimer}>Stop</button>
+          <button type="button" onClick={() => handleSetStateTimer(listId, id, 'isActive', false)}>Stop</button>
         ) : (
-          <button type="button" onClick={startTimer}>Start</button>
+          <button type="button" onClick={() => handleSetStateTimer(listId, id, 'isActive', true)}>Start</button>
         )}
         {(!isActive && currentDelay !== delay) ? (
-          <button type="button" onClick={resetTimer}>Reset</button>
+          <button type="button" onClick={() => handleSetStateTimer(listId, id, 'currentDelay', delay)}>Reset</button>
         ) : (
           <button type="button" disabled>Reset</button>
         )}

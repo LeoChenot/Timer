@@ -1,6 +1,4 @@
-import {
-  SELECT_LIST_ID, SELECT_TIMER, SET_NEW_DELAY, SET_NEW_STRING,
-} from '../actions/editTimerModal';
+import { RESET_STATES_EDIT_TIMER_MODAL, SET_STATE_EDIT_TIMER_MODAL } from '../actions/editTimerModal';
 
 const initialState = {
   name: '',
@@ -10,33 +8,20 @@ const initialState = {
   delay: undefined,
   selectedListId: undefined,
   selectedTimer: undefined,
+  responseMessage: '',
+  loading: false,
 };
 
 const editTimerModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_NEW_STRING: {
+    case SET_STATE_EDIT_TIMER_MODAL: {
       return {
         ...state,
-        [action.state]: action.newString,
+        [action.state]: action.value,
       };
     }
-    case SELECT_LIST_ID: {
-      return {
-        ...state,
-        selectedListId: action.listId,
-      };
-    }
-    case SELECT_TIMER: {
-      return {
-        ...state,
-        selectedTimer: action.timer,
-      };
-    }
-    case SET_NEW_DELAY: {
-      return {
-        ...state,
-        delay: action.newDelay,
-      };
+    case RESET_STATES_EDIT_TIMER_MODAL: {
+      return initialState;
     }
     default: {
       return {

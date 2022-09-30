@@ -1,30 +1,21 @@
-import { HIDE_ALL_MODALS, SHOW_LOGIN_MODAL, SHOW_REGISTER_MODAL } from '../actions/modals';
+import { HIDE_ALL_MODALS, SET_STATE_MODAL } from '../actions/modals';
 
 const initialState = {
   loginModal: false,
   registerModal: false,
+  logoutModal: false,
 };
 
 const modalsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SHOW_LOGIN_MODAL: {
+    case SET_STATE_MODAL: {
       return {
         ...state,
-        loginModal: true,
-      };
-    }
-    case SHOW_REGISTER_MODAL: {
-      return {
-        ...state,
-        registerModal: true,
+        [action.state]: action.value,
       };
     }
     case HIDE_ALL_MODALS: {
-      return {
-        ...state,
-        loginModal: false,
-        registerModal: false,
-      };
+      return initialState;
     }
     default: {
       return {

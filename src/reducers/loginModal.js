@@ -1,31 +1,29 @@
-import { SET_NEW_BOOLEAN, SET_NEW_STRING, TOGGLE_BOOLEAN } from '../actions/loginModal';
+import { RESET_STATES_LOGIN_MODAL, SET_STATE_LOGIN_MODAL, TOGGLE_STATE_LOGIN_MODAL } from '../actions/loginModal';
 
 const initialState = {
-  loginLoading: false,
   email: '',
   password: '',
   showPassword: false,
+  responseMessage: '',
+  loading: false,
 };
 
 const loginModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_NEW_STRING: {
+    case SET_STATE_LOGIN_MODAL: {
       return {
         ...state,
-        [action.state]: action.newString,
+        [action.state]: action.value,
       };
     }
-    case SET_NEW_BOOLEAN: {
-      return {
-        ...state,
-        [action.state]: action.newBoolean,
-      };
-    }
-    case TOGGLE_BOOLEAN: {
+    case TOGGLE_STATE_LOGIN_MODAL: {
       return {
         ...state,
         [action.state]: !state[action.state],
       };
+    }
+    case RESET_STATES_LOGIN_MODAL: {
+      return initialState;
     }
     default: {
       return {

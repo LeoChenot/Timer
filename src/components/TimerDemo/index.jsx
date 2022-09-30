@@ -4,19 +4,12 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import './style.scss';
-import { TextField } from '@mui/material';
-import {
-  resetTimerById,
-  startTimerById,
-  stopTimerById,
-} from '../../actions/timers';
+import { setStateTimer } from '../../actions/user';
 
 function TimerDemo({
-  id, name, delay, currentDelay, isActive,
+  id, name, delay, currentDelay, isActive, listId,
 }) {
   const dispatch = useDispatch();
-
-  let editname = false;
 
   let hours = Math.floor(currentDelay / 3600);
   if (hours < 10) {
@@ -31,37 +24,18 @@ function TimerDemo({
     seconds = `0${seconds}`;
   }
 
-  const test = () => {
-    console.log('je veux edit le name');
-    editname = !editname;
-  };
-
-  const startTimer = () => {
-    dispatch(startTimerById(id));
-  };
-
-  const stopTimer = () => {
-    dispatch(stopTimerById(id));
-  };
-
-  const resetTimer = () => {
-    dispatch(resetTimerById(id));
+  const handleSetStateTimer = (_listId, timerId, state, value) => {
+    dispatch(setStateTimer(_listId, timerId, state, value));
   };
 
   return (
     <div className="timer">
-      {editname ? (
-        <div className="timer__name--edit">
-          <TextField id="standard-basic" label={name} variant="standard" />
-        </div>
-      ) : (
-        <div className="timer__name">
-          <span onDoubleClick={test}>{name}</span>
-          <button type="button">
-            <EditIcon />
-          </button>
-        </div>
-      )}
+      <div className="timer__name">
+        <span>{name}</span>
+        <button type="button">
+          <EditIcon />
+        </button>
+      </div>
       <div className="timer__commands">
         <span>
           {hours}
@@ -71,12 +45,12 @@ function TimerDemo({
           {seconds}
         </span>
         {isActive ? (
-          <button type="button" onClick={stopTimer}>Stop</button>
+          <button type="button" onClick={() => handleSetStateTimer(listId, id, 'isActive', false)}>Stop</button>
         ) : (
-          <button type="button" onClick={startTimer}>Start</button>
+          <button type="button" onClick={() => handleSetStateTimer(listId, id, 'isActive', true)}>Start</button>
         )}
         {(!isActive && currentDelay !== delay) ? (
-          <button type="button" onClick={resetTimer}>Reset</button>
+          <button type="button" onClick={() => handleSetStateTimer(listId, id, 'currentDelay', delay)}>Reset</button>
         ) : (
           <button type="button" disabled>Reset</button>
         )}
@@ -85,12 +59,17 @@ function TimerDemo({
   );
 }
 
+TimerDemo.defaultProps = {
+  listId: undefined,
+};
+
 TimerDemo.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   delay: PropTypes.number.isRequired,
   currentDelay: PropTypes.number.isRequired,
   isActive: PropTypes.bool.isRequired,
+  listId: PropTypes.number,
 };
 
 export default TimerDemo;

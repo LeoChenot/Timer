@@ -1,7 +1,4 @@
-import {
-  SET_NEW_STRING,
-  TOGGLE_BOOLEAN,
-} from '../actions/registerModal';
+import { RESET_STATES_REGISTER_MODAL, SET_STATE_REGISTER_MODAL, TOGGLE_STATE_REGISTER_MODAL } from '../actions/registerModal';
 
 const initialState = {
   email: '',
@@ -12,21 +9,26 @@ const initialState = {
   password2HelperText: '',
   showPassword1: false,
   showPassword2: false,
+  responseMessage: '',
+  loading: false,
 };
 
 const registerModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_NEW_STRING: {
+    case SET_STATE_REGISTER_MODAL: {
       return {
         ...state,
-        [action.state]: action.newString,
+        [action.state]: action.value,
       };
     }
-    case TOGGLE_BOOLEAN: {
+    case TOGGLE_STATE_REGISTER_MODAL: {
       return {
         ...state,
         [action.state]: !state[action.state],
       };
+    }
+    case RESET_STATES_REGISTER_MODAL: {
+      return initialState;
     }
     default: {
       return {

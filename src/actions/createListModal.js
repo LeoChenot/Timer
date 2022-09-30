@@ -1,6 +1,11 @@
-export const SET_NEW_STRING = 'SET_NEW_STRING';
-export const setNewString = (state, newString) => ({
-  type: SET_NEW_STRING,
+export const SET_STATE_CREATE_LIST_MODAL = 'SET_STATE_CREATE_LIST_MODAL';
+export const setStateCreateListModal = (state, value) => ({
+  type: SET_STATE_CREATE_LIST_MODAL,
   state,
-  newString,
+  value,
+});
+
+export const RESET_STATES_CREATE_LIST_MODAL = 'RESET_STATES_CREATE_LIST_MODAL';
+export const resetStatesCreateListModal = () => ({
+  type: RESET_STATES_CREATE_LIST_MODAL,
 });

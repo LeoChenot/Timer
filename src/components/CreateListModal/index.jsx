@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   FormControl,
@@ -12,24 +12,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import './style.scss';
 import { Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { setNewString } from '../../actions/createListModal';
+import { LoadingButton } from '@mui/lab';
+import { resetStatesCreateListModal, setStateCreateListModal } from '../../actions/createListModal';
 import { fetchCreateList } from '../../actions/user';
 
 function CreateListModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSetNewString = (state, value) => {
-    dispatch(setNewString(state, value));
-  };
+  const nameInput = useRef();
 
-  const { name } = useSelector((state) => state.createListModalReducer);
+  const { name, responseMessage, loading } = useSelector((state) => state.createListModalReducer);
+
+  const handleSetState = (state, value) => {
+    dispatch(setStateCreateListModal(state, value));
+  };
 
   const handleSubmitCreate = (event) => {
     event.preventDefault();
-    dispatch(fetchCreateList());
-    navigate('/');
+    dispatch(fetchCreateList(navigate));
   };
+
+  useEffect(() => {
+    nameInput.current.focus();
+  }, []);
+
+  useEffect(() => () => {
+    dispatch(resetStatesCreateListModal());
+  }, []);
 
   return (
     <div className="modal">
@@ -41,17 +51,23 @@ function CreateListModal() {
         <form className="modal__content-form" onSubmit={handleSubmitCreate}>
           <FormControl>
             <TextField
+              inputRef={nameInput}
               id="outlined-basic"
               label="Name"
               variant="outlined"
               type="text"
               value={name}
-              onChange={(event) => handleSetNewString('name', event.target.value)}
+              onChange={(event) => handleSetState('name', event.target.value)}
               required
             />
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
           </FormControl>
-          <Button variant="contained" type="submit">Add</Button>
+          {loading ? (
+            <LoadingButton loading variant="contained">Add</LoadingButton>
+          ) : (
+            <Button variant="contained" type="submit">Add</Button>
+          )}
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>

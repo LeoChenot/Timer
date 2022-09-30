@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
+  FormHelperText,
   IconButton,
 } from '@mui/material';
 
@@ -9,9 +10,10 @@ import {
 import './style.scss';
 import { Clear } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { LoadingButton } from '@mui/lab';
+import { resetStatesDeleteListModal, setStateDeleteListModal } from '../../actions/deleteListModal';
 import { fetchDeleteList } from '../../actions/user';
-import { selectListId } from '../../actions/deleteListModal';
 
 function DeleteListModal() {
   const dispatch = useDispatch();
@@ -20,15 +22,20 @@ function DeleteListModal() {
   const params = useParams();
   const listId = Number(params.listId);
 
+  const { loading, responseMessage } = useSelector((state) => state.deleteListModalReducer);
+
   useEffect(() => {
-    dispatch(selectListId(listId));
+    dispatch(setStateDeleteListModal('selectedListId', listId));
   }, []);
 
   const handleSubmitDelete = (event) => {
     event.preventDefault();
-    dispatch(fetchDeleteList());
-    navigate('/');
+    dispatch(fetchDeleteList(navigate));
   };
+
+  useEffect(() => () => {
+    dispatch(resetStatesDeleteListModal());
+  }, []);
 
   return (
     <div className="modal">
@@ -46,8 +53,13 @@ function DeleteListModal() {
           }}
           >
             <Button variant="contained" onClick={() => navigate('/')}>No</Button>
-            <Button variant="contained" type="submit">Yes</Button>
+            {loading ? (
+              <LoadingButton loading variant="contained">Yes</LoadingButton>
+            ) : (
+              <Button variant="contained" type="submit">Yes</Button>
+            )}
           </FormControl>
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>

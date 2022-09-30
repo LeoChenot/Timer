@@ -1,23 +1,22 @@
-import { SELECT_LIST_ID, SELECT_TIMER } from '../actions/deleteTimerModal';
+import { RESET_STATES_DELETE_TIMER_MODAL, SET_STATE_DELETE_TIMER_MODAL } from '../actions/deleteTimerModal';
 
 const initialState = {
   selectedListId: undefined,
   selectedTimer: undefined,
+  responseMessage: '',
+  loading: false,
 };
 
 const deleteTimerModalReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SELECT_LIST_ID: {
+    case SET_STATE_DELETE_TIMER_MODAL: {
       return {
         ...state,
-        selectedListId: action.listId,
+        [action.state]: action.value,
       };
     }
-    case SELECT_TIMER: {
-      return {
-        ...state,
-        selectedTimer: action.timer,
-      };
+    case RESET_STATES_DELETE_TIMER_MODAL: {
+      return initialState;
     }
     default: {
       return {

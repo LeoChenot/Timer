@@ -10,75 +10,68 @@ import {
   TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { login } from '../../actions/auth';
-import { setNewString, toggleBoolean } from '../../actions/loginModal';
+import { resetStatesLoginModal, setStateLoginModal, toggleStateLoginModal } from '../../actions/loginModal';
 
 // import PropTypes from 'prop-types';
 import './style.scss';
+import { fetchReadUser } from '../../actions/user';
 
 function LoginModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const emailInput = useRef();
 
-  const { auth } = useSelector((state) => state.userReducer);
-
-  const handleSetNewString = (state, value) => {
-    dispatch(setNewString(state, value));
-  };
-
-  const handleToggleBoolean = (state) => {
-    dispatch(toggleBoolean(state));
+  const handleSetState = (state, value) => {
+    dispatch(setStateLoginModal(state, value));
   };
 
   const handleSubmitLogin = (event) => {
     event.preventDefault();
-    dispatch(login());
+    dispatch(fetchReadUser(navigate, pathname));
   };
 
   const {
-    loginLoading,
     email,
     password,
     showPassword,
+    responseMessage,
+    loading,
   } = useSelector((state) => state.loginModalReducer);
 
   useEffect(() => {
-    if (!loginLoading && auth) {
-      let url;
-      if (pathname.length > 1) {
-        url = pathname.substring(0, pathname.length - 1);
-      } else {
-        url = pathname;
-      }
-      navigate(url);
-    }
-  }, [loginLoading]);
+    emailInput.current.focus();
+  }, []);
 
-  const handleCloseThisModal = () => {
-    navigate(`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}`);
-  };
+  useEffect(() => () => {
+    dispatch(resetStatesLoginModal());
+  }, []);
 
   return (
     <div className="modal">
       <div className="modal__content">
-        <IconButton className="modal__content-closeButton" aria-label="add" onClick={handleCloseThisModal}>
+        <IconButton
+          className="modal__content-closeButton"
+          aria-label="add"
+          onClick={() => navigate(`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}`)}
+        >
           <Clear className="modal__content-closeButton-icon" />
         </IconButton>
         <h2 className="modal__content-title">Login</h2>
         <form className="modal__content-form" onSubmit={handleSubmitLogin}>
           <FormControl>
             <TextField
+              inputRef={emailInput}
               id="outlined-basic"
               label="Email"
               autoComplete="username"
               variant="outlined"
               type="text"
               value={email}
-              onChange={(event) => handleSetNewString('email', event.target.value)}
+              onChange={(event) => handleSetState('email', event.target.value)}
               required
             />
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
@@ -89,12 +82,12 @@ function LoginModal() {
               id="outlined-adornment-password"
               type={showPassword ? 'text' : 'password'}
               value={password}
-              onChange={(event) => handleSetNewString('password', event.target.value)}
+              onChange={(event) => handleSetState('password', event.target.value)}
               endAdornment={(
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => handleToggleBoolean('showPassword')}
+                    onClick={() => dispatch(toggleStateLoginModal('showPassword'))}
                     edge="end"
                   >
                     {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -107,11 +100,12 @@ function LoginModal() {
             />
             <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
           </FormControl>
-          {loginLoading ? (
+          {loading ? (
             <LoadingButton loading variant="contained">Login</LoadingButton>
           ) : (
             <Button variant="contained" type="submit">Login</Button>
           )}
+          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
         </form>
       </div>
     </div>
