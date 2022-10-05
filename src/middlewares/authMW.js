@@ -91,7 +91,9 @@ const authMW = (store) => (next) => async (action) => {
         setInstanceAuthorization();
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
+      if (error && error.response && error.response.data && error.response.data.message) {
+        store.dispatch(setStateLoginModal('responseMessage', error.response.data.message));
+      } else {
         store.dispatch(setStateLoginModal('responseMessage', error.message));
       }
       store.dispatch(setStateLoginModal('loading', false));
@@ -141,7 +143,9 @@ const authMW = (store) => (next) => async (action) => {
         store.dispatch(setStateCreateListModal('loading', false));
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
+      if (error && error.response && error.response.data && error.response.data.message) {
+        store.dispatch(setStateCreateListModal('responseMessage', error.response.data.message));
+      } else {
         store.dispatch(setStateCreateListModal('responseMessage', error.message));
       }
       store.dispatch(setStateCreateListModal('loading', false));
@@ -166,7 +170,9 @@ const authMW = (store) => (next) => async (action) => {
         store.dispatch(setStateDeleteListModal('loading', false));
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
+      if (error && error.response && error.response.data && error.response.data.message) {
+        store.dispatch(setStateDeleteListModal('responseMessage', error.response.data.message));
+      } else {
         store.dispatch(setStateDeleteListModal('responseMessage', error.message));
       }
       store.dispatch(setStateDeleteListModal('loading', false));
@@ -193,7 +199,9 @@ const authMW = (store) => (next) => async (action) => {
         store.dispatch(setStateCreateTimerModal('loading', false));
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
+      if (error && error.response && error.response.data && error.response.data.message) {
+        store.dispatch(setStateCreateTimerModal('responseMessage', error.response.data.message));
+      } else {
         store.dispatch(setStateCreateTimerModal('responseMessage', error.message));
       }
       store.dispatch(setStateCreateTimerModal('loading', false));
@@ -217,7 +225,9 @@ const authMW = (store) => (next) => async (action) => {
         store.dispatch(setStateEditTimerModal('loading', false));
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
+      if (error && error.response && error.response.data && error.response.data.message) {
+        store.dispatch(setStateEditTimerModal('responseMessage', error.response.data.message));
+      } else {
         store.dispatch(setStateEditTimerModal('responseMessage', error.message));
       }
       store.dispatch(setStateEditTimerModal('loading', false));
@@ -237,7 +247,9 @@ const authMW = (store) => (next) => async (action) => {
         store.dispatch(setStateDeleteTimerModal('loading', false));
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
+      if (error && error.response && error.response.data && error.response.data.message) {
+        store.dispatch(setStateDeleteTimerModal('responseMessage', error.response.data.message));
+      } else {
         store.dispatch(setStateDeleteTimerModal('responseMessage', error.message));
       }
       store.dispatch(setStateDeleteTimerModal('loading', false));
