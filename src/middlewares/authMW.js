@@ -5,6 +5,7 @@ import { setStateCreateTimerModal } from '../actions/createTimerModal';
 import { setStateDeleteListModal } from '../actions/deleteListModal';
 import { setStateDeleteTimerModal } from '../actions/deleteTimerModal';
 import { setStateEditTimerModal } from '../actions/editTimerModal';
+import { FETCH_UPDATE_TIMER_EXPO, setStateHome, setStateTimerExpo } from '../actions/home';
 import { setStateLoginModal } from '../actions/loginModal';
 import { setStateRegisterModal } from '../actions/registerModal';
 import {
@@ -60,11 +61,16 @@ const authMW = (store) => (next) => async (action) => {
         store.dispatch(setStateRegisterModal('loading', false));
       }, fakeDelay);
     } catch (error) {
-      if (error.name === 'AxiosError') {
-        store.dispatch(setStateRegisterModal('responseMessage', error.message));
-      }
-      store.dispatch(setStateRegisterModal('loading', false));
-      console.log({ error });
+      setTimeout(() => {
+        if (error && error.response && error.response.data && error.response.data.message) {
+          store.dispatch(setStateRegisterModal('responseMessage', error.response.data.message));
+        }
+        else {
+          store.dispatch(setStateRegisterModal('responseMessage', error.message));
+        }
+        store.dispatch(setStateRegisterModal('loading', false));
+      }, fakeDelay);
+      console.log(error);
     }
   }
 
@@ -237,6 +243,23 @@ const authMW = (store) => (next) => async (action) => {
       store.dispatch(setStateDeleteTimerModal('loading', false));
       console.log({ error });
     }
+  }
+
+  // ----------------------
+  // Timer Expo
+
+  else if (action.type === FETCH_UPDATE_TIMER_EXPO) {
+    const state = store.getState();
+    store.dispatch(setStateHome('loading', true));
+    setTimeout(() => {
+      store.dispatch(setStateTimerExpo('name', state.editTimerModalReducer.name));
+      store.dispatch(setStateTimerExpo('delay', state.editTimerModalReducer.delay));
+      store.dispatch(setStateTimerExpo('currentDelay', state.editTimerModalReducer.delay));
+      store.dispatch(setStateTimerExpo('isActive', false));
+      store.dispatch(setStateTimerExpo('intervalId', undefined));
+      action.navigate('/');
+      store.dispatch(setStateHome('loading', false));
+    }, fakeDelay);
   }
   next(action);
 };

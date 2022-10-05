@@ -4,65 +4,135 @@
 .timer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background-color: #fff;
-  padding: 1.6em;
-  border-radius: 0.2em;
+  justify-content: space-between;
+  background-color: #444444;
+  // padding-bottom: 1.6rem;
+  border-radius: 1.2rem;
 
-  height: 8em;
-  width: 15em;
+  // height: 8rem;
+  width: 18rem;
 
   row-gap: 1em;
-  box-shadow: 0 0 1em color.scale(#000, $blackness: 50%);
+  // box-shadow: 0 0 1em color.scale(#000, $blackness: 50%);
 
   position: relative;
+
+  color: #FFFFFF;
+
+  // outline: 0.2rem solid #444444;
+  // outline-offset: -0.2rem;
+
+
+  &__header {
+    // background-color: red;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.499rem;
+
+    &-name {
+      font-size: 1.2rem;
+      margin: 0 1.6rem;
+    }
+
+
+    &-control {
+      align-self: flex-start;
+      background-color: #6b6b6b;
+      width: fit-content;
+      border-top-right-radius: 1.2rem;
+      border-bottom-left-radius: 1.2rem;
+      border: 0.2rem solid #444444;
+
+      &-editButton {
+        height: fit-content;
+        width: fit-content;
+
+        &:hover, &.Mui-focusVisible {
+          background-color: rgba(0, 0, 0, 0) !important;
+        }
+        
+        & &-icon {
+          transition: 400ms;
+        }
     
-
-
-  &__deleteButton {
-    height: fit-content;
-    width: fit-content;
-    position: absolute !important;
-    top: 0rem;
-    right: 0rem;
-
-    &:hover, &.Mui-focusVisible {
-      background-color: rgba(0, 0, 0, 0) !important;
-    }
+        &:hover &-icon {
+          transform: scale(1.2);
+          transition: 200ms; 
+        }
     
-    & &-icon {
-      transition: 400ms;
-    }
+        &:active &-icon {
+          transform: scale(1.4);
+          transition: 200ms;
+        }
+        
+        &-icon {
+          font-size: 1.6rem !important;
+          color: #6b6b6b;
+          background-color: rgb(214, 214, 214);
+          border-radius: 100%;
+          box-shadow: 0 0 0.8rem color.scale(#000, $blackness: 50%);
+          padding: 0.25rem;
+        }
+      }
 
-    &:hover &-icon {
-      transform: scale(1.2);
-      transition: 200ms; 
-    }
-
-    &:active &-icon {
-      transform: scale(1.4);
-      transition: 200ms; 
-    }
+      &-deleteButton {
+        height: fit-content;
+        width: fit-content;
     
-    &-icon {
-      font-size: 1.6rem !important;
-      color: rgb(255, 255, 255);
-      background-color: rgb(255, 0, 0);
-      border-radius: 100%;
-      box-shadow: 0 0 0.8rem color.scale(#000, $blackness: 50%);
-      padding: 0.25rem;
+        &:hover, &.Mui-focusVisible {
+          background-color: rgba(0, 0, 0, 0) !important;
+        }
+        
+        & &-icon {
+          transition: 400ms;
+        }
+    
+        &:hover &-icon {
+          transform: scale(1.2);
+          transition: 200ms; 
+        }
+    
+        &:active &-icon {
+          transform: scale(1.4);
+          transition: 200ms; 
+        }
+        
+        &-icon {
+          font-size: 1.6rem !important;
+          color: #6b6b6b;
+          background-color: rgb(214, 214, 214);
+          border-radius: 100%;
+          box-shadow: 0 0 0.8rem color.scale(#000, $blackness: 50%);
+          padding: 0.25rem;
+        }
+      }
+
     }
   }
 
-  &__name {
-    display: flex;
-    justify-content: space-between;
+  &__delay {
+    font-size: 2.6rem;
+    text-align: center;
   }
 
   &__commands {
+    // background-color: red;
     display: flex;
     justify-content: center;
     align-items: center;
     column-gap: 1em;
+    // padding-bottom: 1.2rem;
+
+    &-button {
+      width: 4.5rem !important;
+      font-size: 0.9rem !important;
+      padding: 0.2rem 0 !important;
+
+      &.Mui-disabled {
+        color: #888888 !important;
+      }
+    }
+    
   }
 }

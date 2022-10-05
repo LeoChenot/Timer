@@ -3,6 +3,8 @@ import { RESET_STATES_LOGIN_MODAL, SET_STATE_LOGIN_MODAL, TOGGLE_STATE_LOGIN_MOD
 const initialState = {
   email: '',
   password: '',
+  emailHelperText: ' ',
+  passwordHelperText: ' ',
   showPassword: false,
   responseMessage: '',
   loading: false,

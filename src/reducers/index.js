@@ -8,6 +8,7 @@ import deleteTimerModalReducer from './deleteTimerModal';
 import createListModalReducer from './createListModal';
 import editTimerModalReducer from './editTimerModal';
 import deleteListModalReducer from './deleteListModal';
+import homeReducer from './home';
 
 const rootReducer = combineReducers({
   userReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   deleteTimerModalReducer,
   editTimerModalReducer,
   deleteListModalReducer,
+  homeReducer,
 });
 
 export default rootReducer;

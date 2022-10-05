@@ -1,4 +1,4 @@
-import { Visibility, VisibilityOff, Clear } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Button,
   FormControl,
@@ -16,8 +16,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { resetStatesLoginModal, setStateLoginModal, toggleStateLoginModal } from '../../actions/loginModal';
 
 // import PropTypes from 'prop-types';
-import './style.scss';
 import { fetchReadUser } from '../../actions/user';
+import Modal from '../Modal';
 
 function LoginModal() {
   const dispatch = useDispatch();
@@ -37,10 +37,45 @@ function LoginModal() {
   const {
     email,
     password,
+    emailHelperText,
+    passwordHelperText,
     showPassword,
     responseMessage,
     loading,
   } = useSelector((state) => state.loginModalReducer);
+
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  useEffect(() => {
+    if (email.length === 0) {
+      handleSetState('emailHelperText', 'Email must not be empty');
+    }
+    else {
+      const emailIsValid = email.match(emailRegex);
+      if (emailIsValid) {
+        handleSetState('emailHelperText', '');
+      }
+      else {
+        handleSetState('emailHelperText', 'Email is not valid');
+      }
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (password.length === 0) {
+      handleSetState('passwordHelperText', 'Password must not be empty');
+    }
+    else {
+      const passwordIsValid = password.match(passwordRegex);
+      if (passwordIsValid) {
+        handleSetState('passwordHelperText', '');
+      }
+      else {
+        handleSetState('passwordHelperText', 'Password is not valid');
+      }
+    }
+  }, [password]);
 
   useEffect(() => {
     emailInput.current.focus();
@@ -51,21 +86,16 @@ function LoginModal() {
   }, []);
 
   return (
-    <div className="modal">
-      <div className="modal__content">
-        <IconButton
-          className="modal__content-closeButton"
-          aria-label="add"
-          onClick={() => navigate(`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}`)}
-        >
-          <Clear className="modal__content-closeButton-icon" />
-        </IconButton>
-        <h2 className="modal__content-title">Login</h2>
-        <form className="modal__content-form" onSubmit={handleSubmitLogin}>
-          <FormControl>
+    <Modal
+      closeButtonPath={`${pathname[pathname.length - 1] === '/' ? pathname.substring(0, pathname.length - 1) : pathname}`}
+      title="Login"
+    >
+      <form className="modal__content-body-form" onSubmit={handleSubmitLogin}>
+        <div className="modal__content-body-form-fields">
+          <FormControl sx={{ '.MuiInputLabel-shrink': { color: emailHelperText === '' && '#00B800 !important' } }}>
             <TextField
               inputRef={emailInput}
-              id="outlined-basic"
+              sx={{ '.MuiOutlinedInput-notchedOutline': { borderColor: emailHelperText === '' && '#00B800 !important' } }}
               label="Email"
               autoComplete="username"
               variant="outlined"
@@ -74,13 +104,13 @@ function LoginModal() {
               onChange={(event) => handleSetState('email', event.target.value)}
               required
             />
-            <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
+            <FormHelperText className="modal__content-body-form-fields-helperText" style={{ maxHeight: emailHelperText !== '' ? '1.5rem' : '0' }}>{emailHelperText}</FormHelperText>
           </FormControl>
-          <FormControl>
+          <FormControl sx={{ '.MuiInputLabel-shrink': { color: passwordHelperText === '' && '#00B800 !important' } }}>
             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-password"
               type={showPassword ? 'text' : 'password'}
+              sx={{ '.MuiOutlinedInput-notchedOutline': { borderColor: passwordHelperText === '' && '#00B800 !important' } }}
               value={password}
               onChange={(event) => handleSetState('password', event.target.value)}
               endAdornment={(
@@ -98,17 +128,19 @@ function LoginModal() {
               autoComplete="current-password"
               required
             />
-            <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
+            <FormHelperText className="modal__content-body-form-fields-helperText" style={{ maxHeight: passwordHelperText !== '' ? '1.5rem' : '0' }}>{passwordHelperText}</FormHelperText>
           </FormControl>
+        </div>
+        <div className="modal__content-body-form-submit">
           {loading ? (
-            <LoadingButton loading variant="contained">Login</LoadingButton>
+            <LoadingButton className="modal__content-body-form-submit-button" loading variant="contained">Login</LoadingButton>
           ) : (
-            <Button variant="contained" type="submit">Login</Button>
+            <Button className="modal__content-body-form-submit-button" variant="contained" type="submit">Login</Button>
           )}
-          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
-        </form>
-      </div>
-    </div>
+          <p className="modal__content-body-form-submit-responseText" style={{ maxHeight: responseMessage !== '' ? '1.5rem' : '0' }}>{responseMessage}</p>
+        </div>
+      </form>
+    </Modal>
   );
 }
 

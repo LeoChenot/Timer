@@ -41,6 +41,8 @@ function Main() {
     <main className="main">
       <Routes>
         <Route path="/" element={<Home />}>
+          <Route path="/timer/edit" element={<EditTimerModal timerExpo />} />
+
           <Route path="/lists/create" element={<CreateListModal />} />
           <Route path="/lists/:listId/delete" element={<DeleteListModal />} />
           <Route path="/lists/:listId/timers/create" element={<CreateTimerModal />} />

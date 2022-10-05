@@ -3,18 +3,16 @@ import {
   Button,
   FormControl,
   FormHelperText,
-  IconButton,
   TextField,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 // import PropTypes from 'prop-types';
-import './style.scss';
-import { Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { resetStatesCreateListModal, setStateCreateListModal } from '../../actions/createListModal';
 import { fetchCreateList } from '../../actions/user';
+import Modal from '../Modal';
 
 function CreateListModal() {
   const dispatch = useDispatch();
@@ -22,7 +20,12 @@ function CreateListModal() {
 
   const nameInput = useRef();
 
-  const { name, responseMessage, loading } = useSelector((state) => state.createListModalReducer);
+  const {
+    name,
+    nameHelperText,
+    responseMessage,
+    loading,
+  } = useSelector((state) => state.createListModalReducer);
 
   const handleSetState = (state, value) => {
     dispatch(setStateCreateListModal(state, value));
@@ -34,6 +37,15 @@ function CreateListModal() {
   };
 
   useEffect(() => {
+    if (name.length === 0) {
+      handleSetState('nameHelperText', 'Name must not be empty');
+    }
+    else {
+      handleSetState('nameHelperText', '');
+    }
+  }, [name]);
+
+  useEffect(() => {
     nameInput.current.focus();
   }, []);
 
@@ -42,17 +54,16 @@ function CreateListModal() {
   }, []);
 
   return (
-    <div className="modal">
-      <div className="modal__content">
-        <IconButton className="modal__content-closeButton" aria-label="add" onClick={() => navigate('/')}>
-          <Clear className="modal__content-closeButton-icon" />
-        </IconButton>
-        <h2 className="modal__content-title">Create List</h2>
-        <form className="modal__content-form" onSubmit={handleSubmitCreate}>
-          <FormControl>
+    <Modal
+      closeButtonPath="/"
+      title="Create List"
+    >
+      <form className="modal__content-body-form" onSubmit={handleSubmitCreate}>
+        <div className="modal__content-body-form-fields">
+          <FormControl sx={{ '.MuiInputLabel-shrink': { color: nameHelperText === '' && '#00B800 !important' } }}>
             <TextField
               inputRef={nameInput}
-              id="outlined-basic"
+              sx={{ '.MuiOutlinedInput-notchedOutline': { borderColor: nameHelperText === '' && '#00B800 !important' } }}
               label="Name"
               variant="outlined"
               type="text"
@@ -60,17 +71,19 @@ function CreateListModal() {
               onChange={(event) => handleSetState('name', event.target.value)}
               required
             />
-            <FormHelperText id="my-helper-text">We&apos;ll never share your email.</FormHelperText>
+            <FormHelperText className="modal__content-body-form-fields-helperText" style={{ maxHeight: nameHelperText !== '' ? '1.5rem' : '0' }}>{nameHelperText}</FormHelperText>
           </FormControl>
+        </div>
+        <div className="modal__content-body-form-submit">
           {loading ? (
-            <LoadingButton loading variant="contained">Add</LoadingButton>
+            <LoadingButton className="modal__content-body-form-submit-button" loading variant="contained">Add</LoadingButton>
           ) : (
-            <Button variant="contained" type="submit">Add</Button>
+            <Button className="modal__content-body-form-submit-button" variant="contained" type="submit">Add</Button>
           )}
-          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
-        </form>
-      </div>
-    </div>
+          <p className="modal__content-body-form-submit-responseText" style={{ maxHeight: responseMessage !== '' ? '1.5rem' : '0' }}>{responseMessage}</p>
+        </div>
+      </form>
+    </Modal>
   );
 }
 

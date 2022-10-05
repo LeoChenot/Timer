@@ -18,5 +18,7 @@
         "react"
     ],
     "rules": {
+        "no-useless-escape": "off",
+        "brace-style": "off"
     }
 }

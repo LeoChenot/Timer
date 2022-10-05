@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react';
-import {
-  Button,
-  FormControl,
-  FormHelperText,
-  IconButton,
-} from '@mui/material';
+import { Button } from '@mui/material';
 
 // import PropTypes from 'prop-types';
-import './style.scss';
-import { Clear } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { resetStatesDeleteListModal, setStateDeleteListModal } from '../../actions/deleteListModal';
 import { fetchDeleteList } from '../../actions/user';
+import Modal from '../Modal';
 
 function DeleteListModal() {
   const dispatch = useDispatch();
@@ -38,31 +32,24 @@ function DeleteListModal() {
   }, []);
 
   return (
-    <div className="modal">
-      <div className="modal__content">
-        <IconButton className="modal__content-closeButton" aria-label="add" onClick={() => navigate('/')}>
-          <Clear className="modal__content-closeButton-icon" />
-        </IconButton>
-        <h2 className="modal__content-title">Are you sure you want to delete this list ?</h2>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          ...
-        </div>
-        <form className="modal__content-form" onSubmit={handleSubmitDelete}>
-          <FormControl style={{
-            display: 'flex', flexDirection: 'row', justifyContent: 'center', columnGap: '1rem',
-          }}
-          >
-            <Button variant="contained" onClick={() => navigate('/')}>No</Button>
+    <Modal
+      closeButtonPath="/"
+      title="Are you sure you want to delete this list ?"
+    >
+      <form className="modal__content-body-form" onSubmit={handleSubmitDelete}>
+        <div className="modal__content-body-form-submit">
+          <div className="modal__content-body-form-submit-group">
+            <Button className="modal__content-body-form-submit-group-button" variant="contained" onClick={() => navigate('/')}>No</Button>
             {loading ? (
-              <LoadingButton loading variant="contained">Yes</LoadingButton>
+              <LoadingButton className="modal__content-body-form-submit-group-button" loading variant="contained">Yes</LoadingButton>
             ) : (
-              <Button variant="contained" type="submit">Yes</Button>
+              <Button className="modal__content-body-form-submit-group-button" variant="contained" type="submit">Yes</Button>
             )}
-          </FormControl>
-          <FormHelperText id="my-helper-text">{responseMessage}</FormHelperText>
-        </form>
-      </div>
-    </div>
+          </div>
+          <p className="modal__content-body-form-submit-responseText" style={{ maxHeight: responseMessage !== '' ? '1.5rem' : '0' }}>{responseMessage}</p>
+        </div>
+      </form>
+    </Modal>
   );
 }
 

@@ -1,23 +1,21 @@
-import { Button, IconButton } from '@mui/material';
-import { Add, Clear } from '@mui/icons-material';
+/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Outlet, useNavigate,
-} from 'react-router-dom';
-import Timer from '../Timer';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 // import PropTypes from 'prop-types';
 import './style.scss';
-import TimerDemo from '../TimerDemo';
+import { Button } from '@mui/material';
 import { fetchReadLists } from '../../actions/user';
+import HomeConnected from '../HomeConnected';
+import Timer from '../Timer';
 
 function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { lists } = useSelector((state) => state.userReducer);
   const { auth } = useSelector((state) => state.userReducer);
+  const { timer } = useSelector((state) => state.homeReducer);
 
   useEffect(() => {
     if (auth) {
@@ -28,60 +26,52 @@ function Home() {
   return (
     <div className="home">
       {!auth ? (
-        <div>
-          <h1>Bienvenue sur Timers</h1>
-          <TimerDemo
-            id={1}
-            name="Coquillettes"
-            delay={480}
-            currentDelay={480}
-            isActive={false}
-            intervalId={null}
-          />
-          <p>Veuillez vous connecter pour avoir accès au site</p>
+        <div className="home__container">
+          <div className="home__container-header">
+            <h1 className="home__container-header-title">Welcome on Timers</h1>
+            <p className="home__container-header-description">
+              Timers est un site permettant de créer des minuteurs, triés par liste
+              <br />
+              ...
+              <br />
+              <br />
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam tenetur quo distinctio quis debitis fuga nisi sed, molestias, error magnam aut illum obcaecati ut recusandae mollitia temporibus quisquam nemo. Eaque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque minima voluptate nemo odio quibusdam perferendis repellendus! Iste, eos sunt maxime iure fugiat, consectetur error totam ad officiis nihil atque odit.
+            </p>
+          </div>
+          <div className="home__container-body">
+            <p className="home__container-body-text">Example of Timer :</p>
+            <Timer
+              id={timer.id}
+              name={timer.name}
+              delay={timer.delay}
+              currentDelay={timer.currentDelay}
+              isActive={timer.isActive}
+              intervalId={timer.intervalId}
+              dontShowControl
+              timerExpo
+            />
+          </div>
+          <div className="home__container-footer">
+            <p className="home__container-footer-text">Please Login to access all features</p>
+
+            <div className="home__container-footer-buttonGroup">
+              <Button
+                variant="contained"
+                onClick={() => navigate('/?login')}
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => navigate('/?register')}
+              >
+                Register
+              </Button>
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="home__connected">
-          <h2>Timers :</h2>
-          <Button
-            variant="contained"
-            onClick={() => { navigate('/lists/create'); }}
-          >
-            New List
-
-          </Button>
-          {lists !== undefined && lists.map((list) => (
-            <div className="main__timersList" key={list.id}>
-              <IconButton
-                className="timer__deleteButton"
-                aria-label="add"
-                onClick={() => navigate(`/lists/${list.id}/delete`)}
-              >
-                <Clear className="timer__deleteButton-icon" />
-              </IconButton>
-              <h3>{list.name}</h3>
-              {list.timers.map((timer) => (
-                <Timer
-                  key={timer.id}
-                  id={timer.id}
-                  name={timer.name}
-                  delay={timer.delay}
-                  currentDelay={timer.currentDelay}
-                  isActive={timer.isActive}
-                  intervalId={timer.intervalId}
-                  listId={list.id}
-                />
-              ))}
-              <IconButton
-                className="home__connected-yolobutton"
-                aria-label="add"
-                onClick={() => { navigate(`/lists/${list.id}/timers/create`); }}
-              >
-                <Add className="home__connected-yolobutton-icon" />
-              </IconButton>
-            </div>
-          ))}
-        </div>
+        <HomeConnected />
       )}
       <Outlet />
     </div>

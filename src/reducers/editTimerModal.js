@@ -5,6 +5,8 @@ const initialState = {
   hours: 0,
   minutes: 0,
   seconds: 0,
+  nameHelperText: ' ',
+  delayHelperText: ' ',
   delay: undefined,
   selectedListId: undefined,
   selectedTimer: undefined,

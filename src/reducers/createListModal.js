@@ -2,6 +2,7 @@ import { RESET_STATES_CREATE_LIST_MODAL, SET_STATE_CREATE_LIST_MODAL } from '../
 
 const initialState = {
   name: '',
+  nameHelperText: ' ',
   responseMessage: '',
   loading: false,
 };
